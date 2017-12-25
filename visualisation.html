@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.node {
+  cursor: pointer;
+}
+
+.node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.node polygon {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.node text {
+  font: 12px sans-serif;
+}
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
+
+.linkElement {
+	color: #0000FF;
+}
+.linkElement:hover {
+	text-decoration: underline;
+}
+
+.term {
+	color: #FF0000
+}
+.synt {
+	color: #0000FF
+}
+
+</style>
+<body>
+<table>
+	<tr>
+		<td width=300>
+			<form enctype="multipart/form-data">
+				<input type=file id="BrowseForLattice">
+			</form>
+		</td>
+		<td>
+			<a class="linkElement" id="goTOP" onclick="">Go to the TOP node</a>
+		</td>
+		<td width=20/>
+		<td>
+			<a class="linkElement" id="goBOTTOM" onclick="">Go to the BOTTOM node</a>
+		</td>
+	</tr>
+</table>
+<table border="2">
+	<tr>
+		<td id="SVGPicture"></td>
+	<tr>
+		<td><table border="1">
+		<td id="CurrentConceptInfoName" style="font-size:xx-small">
+		</td>
+		<td id="CurrentConceptInfo" height=100 style="font-size:small"> Current concept info </td>
+		</td></table>
+	</tr>
+	<tr>
+		<td><table border="1">
+		<td id="MouseoverConceptInfoName" style="font-size:xx-small">
+		</td>
+		<td id="MouseoverConceptInfo" height=100 style="font-size:small"> "Mouse over" concept info </td>
+		</td></table>
+	</tr>
+</table>
+<script src="jquery-2.1.1.min.js"></script>
+<script src="d3.v3.min.js"></script>
+<script src="visualisator.js"></script>
