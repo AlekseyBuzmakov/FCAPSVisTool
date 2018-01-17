@@ -304,10 +304,10 @@ function mouseenter(d) {
 function nodeHtml(d){
 	var result="<div><ul>";
 	if( d.Int ) {
-		result += visMember( "Intent", d.Int );
+		result += visMember( "Intent", d.Int, currNode.Int );
 	}
 	if( d.Ext ) {
-		result += visMember( "Extent", d.Ext );
+		result += visMember( "Extent", d.Ext, currNode.Ext );
 	}
 	for( key in d ) {
 		if( key == "Extent"
@@ -321,25 +321,55 @@ function nodeHtml(d){
 		{
 			continue;
 		}
-		result += visMember( key, d[key] );
+		result += visMember( key, d[key], currNode[key] );
+	}
+	for( key in currNode ) {
+		if( key == "Extent"
+				|| key == "Int"
+				|| key == "Ext"
+				|| key == "ID"
+				|| key == "Children"
+				|| key == "Parents"
+		 		|| key == "x"
+		 		|| key == "y" )
+		{
+			continue;
+		}
+		if( d[key] == null ) {
+			result += visMember( key, null, currNode[key] );
+		}
 	}
 	result += "</ul></div>";
 	return result;
 }
 // http://www.codeproject.com/Articles/24549/How-to-Inspect-a-JavaScript-Object
 // Formats info about one node field (or member)
-function visMember( key, value ) {
-	return "<li>" + key + visSynt(":") + visValue(value) + "</li>";
+function visMember( key, value, cmpValue ) {
+	var keyType = "ordinary";
+	if( cmpValue == null && value != null ) {
+		keyType = "new";
+	} 
+	if( cmpValue != null && value == null ) {
+		keyType = "removed";
+	}
+	return "<li>" + visKey(key, keyType) + visSynt(":") + visValue(value, cmpValue) + "</li>";
 }
 
-function visValue(v) {
+function visValue(v, cmpV) {
 	//return JSON.stringify(v);
 	if(v==null) {
-		return visTerm("null");
+		if(typeof(cmpV) == 'object') {
+			return visTerm(null, "new" );
+		} else {
+			return visTerm(cmpV, "removed" );
+		}
 	}
 	type =  typeof(v);
 	if(type != 'object'){
-		return visTerm(v);
+		if( cmpV == null ) {
+			return visTerm(v, "new" );
+		} 
+		return visTerm(v, cmpV == v ? "ordinary" : "changed" );
 	}
 	if( $.isArray(v) ) {
 		var result = visSynt("[");
@@ -348,7 +378,21 @@ function visValue(v) {
 			if(!isFirst) {
 				result += visSynt(" ,");
 			}
-			result += visValue(v[vv]);
+			if( $.inArray(v[vv],cmpV)>=0 ) {
+				result += visValue(v[vv],v[vv]);
+			} else {
+				result += visValue(v[vv],null);
+			}
+			isFirst=false;
+		}
+		for( vv in cmpV ) {
+			if( $.inArray(cmpV[vv],v) >= 0 ) {
+				continue;
+			}
+			if(!isFirst) {
+				result += visSynt(" ,");
+			}
+			result += visValue(null,cmpV[vv]);
 			isFirst=false;
 		}
 		result += visSynt("]");
@@ -357,14 +401,38 @@ function visValue(v) {
 	// type == 'object'
 	var result = "<ul>";
 	for( m in v ) {
-		result += visMember(m,v[m]);
+		result += visMember(m,v[m],cmpV[m]);
+	}
+	for( m in cmpV ) {
+		if( v[m] == null ) {
+			result += visMember(m,null,cmpV[m]);
+		}
 	}
 	result += "</ul>";	
 	return result;
 }
 
-function visTerm(t) {
-	return "<a class=\"term\">" + t + "</a>";
+function visKey(k,keyType) {
+	switch(keyType) {
+		case 'new':
+			return "<a class=\"newKey\">" + k + "</a>";
+		case 'removed':
+			return "<a class=\"removedKey\">" + k + "</a>";
+		default:
+			return "<a class=\"key\">" + k + "</a>";
+	}
+}
+function visTerm(t, termType) {
+	switch(termType) {
+		case 'new':
+			return "<a class=\"newTerm\">" + t + "</a>";
+		case 'changed':
+			return "<a class=\"changedTerm\">" + t + "</a>";
+		case 'removed':
+			return "<a class=\"removedTerm\">" + t + "</a>";
+		default:
+			return "<a class=\"term\">" + t + "</a>";
+	}
 }
 function visSynt(s) {
 	return "<a class=\"synt\">" + s + "</a>";
