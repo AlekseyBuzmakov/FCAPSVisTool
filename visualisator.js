@@ -401,11 +401,11 @@ function visValue(v, cmpV) {
 	// type == 'object'
 	var result = "<ul>";
 	for( m in v ) {
-		result += visMember(m,v[m],cmpV[m]);
+		result += visMember(m,v[m],cmpV == null? null : cmpV[m]);
 	}
 	for( m in cmpV ) {
 		if( v[m] == null ) {
-			result += visMember(m,null,cmpV[m]);
+			result += visMember(m,null,cmpV == null? null : cmpV[m]);
 		}
 	}
 	result += "</ul>";	
