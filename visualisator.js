@@ -403,9 +403,12 @@ function visValue(v, cmpV) {
 	for( m in v ) {
 		result += visMember(m,v[m],cmpV == null? null : cmpV[m]);
 	}
-	for( m in cmpV ) {
-		if( v[m] == null ) {
-			result += visMember(m,null,cmpV == null? null : cmpV[m]);
+	if(typeof(cmpV)=='object') {
+		// Just in case it is not an artificial node
+		for( m in cmpV ) {
+			if( v[m] == null ) {
+				result += visMember(m,null,cmpV == null? null : cmpV[m]);
+			}
 		}
 	}
 	result += "</ul>";	
