@@ -352,7 +352,12 @@ function visMember( key, value, cmpValue ) {
 	if( cmpValue != null && value == null ) {
 		keyType = "removed";
 	}
-	return "<li>" + visKey(key, keyType) + visSynt(":") + visValue(value, cmpValue) + "</li>";
+	if(key == 'Inds') {
+	  	// A not readable set of numbers
+		return "";
+	} else {
+		return "<li>" + visKey(key, keyType) + visSynt(":") + visValue(value, cmpValue) + "</li>";
+	}
 }
 
 function visValue(v, cmpV) {
