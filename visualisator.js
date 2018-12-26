@@ -9,7 +9,7 @@ var margin = {top: 10, right: 10, bottom: 10, left: 10},
     layoutWidth = window.innerWidth - 40,
     layoutHeight = window.innerHeight - 100,
     pannelWidth = layoutWidth - margin.left - margin.right,
-    pannelHeight = Math.max(0.15 * layoutHeight, 100),
+    pannelHeight = Math.max(0.25 * layoutHeight, 100),
     width = layoutWidth - margin.right - margin.left,
     height = Math.max( layoutHeight - 2 * pannelHeight, 100 );
     
